@@ -1,0 +1,2 @@
+<!-- Paste the az deployment group create JSON/text output here.
+     It must show provisioningState: Succeeded. -->

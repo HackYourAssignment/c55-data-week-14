@@ -1,0 +1,52 @@
+name: PR body check
+
+# Fails the check when a pull request description is missing the sections from
+# .github/PULL_REQUEST_TEMPLATE.md. GitHub only auto-fills that template in the
+# web "compose" form and in `gh pr create` with no --body; a PR opened through
+# the REST API or `gh pr create --body "..."` (the path most AI tools take)
+# silently skips it. This check is the only thing that actually enforces it.
+#
+# Recovery is automatic: editing the PR description fires the `edited` event and
+# re-runs this check with the new body. No new commit or manual re-run needed.
+
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check required sections are present
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          set -euo pipefail
+          required=(
+            "## What I built"
+            "## How to review"
+            "## How to run"
+            "## What reviewers should see"
+            "## Self-check"
+          )
+          missing=()
+          for section in "${required[@]}"; do
+            if ! printf '%s' "$PR_BODY" | grep -qiF "$section"; then
+              missing+=("$section")
+            fi
+          done
+          if [ ${#missing[@]} -ne 0 ]; then
+            echo "::error::Your PR description is missing required sections. Start from the template (.github/PULL_REQUEST_TEMPLATE.md) and keep these headings:"
+            for m in "${missing[@]}"; do echo "  - $m"; done
+            echo ""
+            echo "If you (or an AI tool) opened this PR without the template, click 'Edit' on the"
+            echo "PR description, paste the template, and fill it in. Editing the description"
+            echo "re-runs this check automatically. A complete PR is easy to review and"
+            echo "reproducible: that is part of the assignment."
+            exit 1
+          fi
+          echo "All required PR sections present."
