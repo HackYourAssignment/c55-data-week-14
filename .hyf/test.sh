@@ -3,6 +3,9 @@
 # GitHub Actions without class credentials. The grader checks Bicep shape,
 # evidence files, write-up / AI report length, and blocks leaked secrets.
 #
+# Starter is Chapter 4–complete (storage module + nested `raw` container).
+# Level 2 grades EXTENSIONS on that starter: environment tags + second container.
+#
 # Total points: 100. Passing score: 60.
 set -euo pipefail
 
@@ -46,38 +49,41 @@ fi
 score=$((score + l1))
 pass "Level 1: required files ($l1/20 pts)"
 
-# ── Level 2 (35 pts): Bicep shape ───────────────────────────────────────────
+# ── Level 2 (35 pts): Ch4 baseline kept + extensions ────────────────────────
+# Baseline (20): @secure, module, storageAccounts, ≥1 nested container.
+# Extensions (15→20 listed): environment param (5) + tags wiring (5) + curated (10).
+# Point math: 20+5+5+10=40 raw; curated is the 10-pt extension and L2 caps at 35
+# by awarding baseline container as required-fail without double-counting past 35:
+#   awarded = @secure5 + module5 + storage5 + container5 + env5 + tags5 + curated10
+#   then min(l2, 35). Fresh starter scores 20/35 (baseline only).
 l2=0
 main="$REPO_ROOT/main.bicep"
 mod="$REPO_ROOT/modules/storage.bicep"
 
+bicep_sources=()
 if [[ -f "$main" ]]; then
-  if grep -qE '^param[[:space:]]+' "$main"; then
-    l2=$((l2 + 5)); pass "main.bicep declares a param"
-  else
-    fail "main.bicep has no param declaration"
-  fi
-  if grep -qE '^output[[:space:]]+' "$main"; then
-    l2=$((l2 + 5)); pass "main.bicep declares an output"
-  else
-    fail "main.bicep has no output declaration"
-  fi
+  bicep_sources+=("$main")
+fi
+if compgen -G "$REPO_ROOT/modules/*.bicep" > /dev/null; then
+  # shellcheck disable=SC2206
+  bicep_sources+=("$REPO_ROOT"/modules/*.bicep)
+fi
+
+if [[ -f "$main" ]]; then
+  # --- Baseline (keep from Ch4 starter) ---
   if grep -qE '^@secure\(\)' "$main"; then
     l2=$((l2 + 5)); pass "main.bicep has an @secure() parameter"
   else
     fail "main.bicep is missing @secure() (required even with a dummy value)"
   fi
   if grep -qE '^module[[:space:]]+' "$main"; then
-    l2=$((l2 + 10)); pass "main.bicep calls a module"
+    l2=$((l2 + 5)); pass "main.bicep calls a module"
   else
-    fail "main.bicep has no module call — move at least one resource into modules/"
+    fail "main.bicep has no module call — keep the modules/storage.bicep call from the starter"
   fi
-  # Required pair: storage account + nested blob container (parent/child stack).
-  bicep_sources=("$main")
-  if compgen -G "$REPO_ROOT/modules/*.bicep" > /dev/null; then
-    # shellcheck disable=SC2206
-    bicep_sources+=("$REPO_ROOT"/modules/*.bicep)
-  fi
+fi
+
+if [[ "${#bicep_sources[@]}" -gt 0 ]]; then
   if grep -qhE "Microsoft\\.Storage/storageAccounts@" "${bicep_sources[@]}" 2>/dev/null; then
     l2=$((l2 + 5)); pass "declares a storage account resource"
   else
@@ -88,16 +94,45 @@ if [[ -f "$main" ]]; then
   else
     fail "missing nested blob container (Microsoft.Storage/.../containers) — account alone is not enough"
   fi
+
+  # --- Extensions (Task 1–2) ---
+  if grep -qiE '^param[[:space:]]+environment[[:space:]]' "$main" 2>/dev/null; then
+    l2=$((l2 + 5)); pass "main.bicep declares param environment"
+  else
+    fail "main.bicep missing param environment (Task 1)"
+  fi
+
+  # Tags wiring: param environment + a real `tags:` assignment (not comment-only)
+  if grep -qiE '^param[[:space:]]+environment[[:space:]]' "$main" 2>/dev/null \
+    && grep -qhE '^[[:space:]]*tags:' "${bicep_sources[@]}" 2>/dev/null; then
+    l2=$((l2 + 5)); pass "environment tag wiring present (param environment + tags:)"
+  else
+    fail "missing Environment tag wiring — pass tags from main into the module (Task 1)"
+  fi
+
+  container_count=$(grep -hE "blobServices/containers@|/containers@" "${bicep_sources[@]}" 2>/dev/null | wc -l | tr -d ' ')
+  has_curated=false
+  if grep -qhE "['\"]curated['\"]" "${bicep_sources[@]}" 2>/dev/null; then
+    has_curated=true
+  fi
+  if [[ "$container_count" -ge 2 ]] || [[ "$has_curated" == true ]]; then
+    l2=$((l2 + 10)); pass "second nested container (curated) present"
+  else
+    fail "need a second nested container named curated (keep raw; Task 2)"
+  fi
+
+  if [[ "$container_count" -lt 2 ]]; then
+    warn "only $container_count nested container resource(s) — Task 2 expects raw + curated (count >= 2)"
+  fi
 fi
 
-# Module file should not still be a pure TODO stub with zero resources when main calls it —
-# still award shape points above; warn if module has no resource.
-if [[ -f "$mod" ]] && ! grep -qE '^resource[[:space:]]+' "$mod"; then
-  warn "modules/storage.bicep has no resource yet — expected once you finish Task 1"
+# Raw check sum can be 40; L2 bucket is 35.
+if [[ "$l2" -gt 35 ]]; then
+  l2=35
 fi
 
 score=$((score + l2))
-pass "Level 2: Bicep shape ($l2/35 pts)"
+pass "Level 2: Bicep baseline + extensions ($l2/35 pts)"
 
 # ── Level 3 (25 pts): deploy evidence ───────────────────────────────────────
 l3=0

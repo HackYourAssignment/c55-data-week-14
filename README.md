@@ -1,8 +1,8 @@
 # Week 14 Assignment: Infrastructure as Code (Bicep)
 
-Provision a small Azure stack as code. The required work is Bicep: two (or more)
-resources, parameters, a module, `what-if`, portal confirmation, a short write-up,
-and an AI-assist report.
+Extend a Chapter 4–complete Bicep starter (storage account + nested `raw`
+container) with an environment tag and a second `curated` container, then
+deploy, preview with `what-if`, confirm in the portal, and write it up.
 
 The full assignment chapter (with all task instructions) lives in your
 HackYourFuture Notion curriculum under Week 14.
@@ -12,7 +12,7 @@ HackYourFuture Notion curriculum under Week 14.
 ## Project structure
 
 ```text
-data-assignment-week-14/
+c55-data-week-14/
 ├── .github/
 │   ├── PULL_REQUEST_TEMPLATE.md   Required PR description sections
 │   └── workflows/
@@ -23,15 +23,16 @@ data-assignment-week-14/
 ├── .hyf/
 │   ├── test.sh                    The auto-grader (`bash .hyf/test.sh`)
 │   └── grader_lib.sh              Shared helpers
-├── main.bicep                     Task 1: entry template
+├── main.bicep                     Starter (Ch4 end state) — Task 1–2: extend
 ├── modules/
-│   └── storage.bicep              Task 1: storage account + nested container
+│   └── storage.bicep              Starter: storage + nested `raw` — extend
 ├── docs/
-│   ├── deploy_succeeded.txt       Task 1: az deployment group create output
-│   ├── what_if.txt                Task 1: az deployment group what-if output
-│   └── portal_confirm.md          Task 1: portal confirmation notes
-├── WRITEUP.md                     Task 2: half-page teammate write-up
-├── AI_ASSIST.md                   Task 4: LLM prompt + your review
+│   ├── deploy_succeeded.txt       Task 3: az deployment group create output
+│   ├── what_if.txt                Task 3: az deployment group what-if output
+│   ├── portal_confirm.md          Task 3: portal confirmation notes
+│   └── optional/                  Task 6: optional CI what-if evidence
+├── WRITEUP.md                     Task 4: half-page teammate write-up
+├── AI_ASSIST.md                   Task 5: LLM prompt + your review
 └── README.md                      This file
 ```
 
@@ -39,11 +40,19 @@ data-assignment-week-14/
 
 | Step | File | Task |
 |---|---|---|
-| 1 | `main.bicep` + `modules/storage.bicep` | Author and modularize (Task 1) |
-| 2 | Azure CLI against `$CLASS_RG` | Deploy + `what-if` + save outputs under `docs/` |
-| 3 | Azure portal | Confirm resources; fill `docs/portal_confirm.md` |
-| 4 | `WRITEUP.md` | Half-page write-up (Task 2) |
-| 5 | `AI_ASSIST.md` | One critically reviewed LLM use (Task 4) |
+| 1 | `main.bicep` + `modules/storage.bicep` | Extend with `environment` param + Environment tags |
+| 2 | `modules/storage.bicep` | Keep `raw`; add nested container `curated` |
+| 3 | Azure CLI + portal → `docs/` | Deploy + `what-if` + portal evidence |
+| 4 | `WRITEUP.md` | Half-page write-up |
+| 5 | `AI_ASSIST.md` | One critically reviewed LLM use |
+| 6 | `.github/workflows/bicep.yml` + `docs/optional/` | Optional CI preview (bonus) |
+
+When you are done, tear down every resource this assignment created (delete the
+storage account; nested containers go with it). Teardown is part of the
+guidelines, not a separate graded file.
+
+Do **not** replace the starter with a paste from `azure-bicep-reference`
+`*-solution` branches — extend what is already here.
 
 ## Open in Codespaces
 
@@ -63,7 +72,9 @@ bash .hyf/test.sh
 ```
 
 The grader is static only (it cannot reach your Azure subscription). Teachers still
-review the live deploy and the evidence files under `docs/`.
+review the live deploy and the evidence files under `docs/`. On a fresh clone the
+starter should clear the Level 2 *baseline* checks; environment tags and `curated`
+are the extensions the grader awards next.
 
 When you open the PR into your cohort repo, keep the headings from
 `.github/PULL_REQUEST_TEMPLATE.md`. A `pr-body-check` workflow fails the PR if those
