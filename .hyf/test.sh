@@ -50,12 +50,12 @@ score=$((score + l1))
 pass "Level 1: required files ($l1/20 pts)"
 
 # ── Level 2 (35 pts): Ch4 baseline kept + extensions ────────────────────────
-# Baseline (20): @secure, module, storageAccounts, ≥1 nested container.
-# Extensions (15→20 listed): environment param (5) + tags wiring (5) + curated (10).
-# Point math: 20+5+5+10=40 raw; curated is the 10-pt extension and L2 caps at 35
-# by awarding baseline container as required-fail without double-counting past 35:
-#   awarded = @secure5 + module5 + storage5 + container5 + env5 + tags5 + curated10
-#   then min(l2, 35). Fresh starter scores 20/35 (baseline only).
+# Baseline (20): @secure 5 + module 5 + storageAccounts 5 + >=1 nested container 5.
+# Extensions (15): environment param 5 + tags wiring 5 + curated container 5.
+# 20 + 15 = 35 exactly, so there is no cap. That matters: an earlier version
+# awarded 40 raw into a 35 cap, which meant dropping any single baseline check
+# cost zero points (a tree with no @secure() still scored 35/35 and 100/100).
+# Every check below is now load-bearing. Fresh starter scores 20/35 (baseline).
 l2=0
 main="$REPO_ROOT/main.bicep"
 mod="$REPO_ROOT/modules/storage.bicep"
@@ -115,20 +115,19 @@ if [[ "${#bicep_sources[@]}" -gt 0 ]]; then
   if grep -qhE "['\"]curated['\"]" "${bicep_sources[@]}" 2>/dev/null; then
     has_curated=true
   fi
-  if [[ "$container_count" -ge 2 ]] || [[ "$has_curated" == true ]]; then
-    l2=$((l2 + 10)); pass "second nested container (curated) present"
+  # Both conditions required. The string alone used to be enough, so a comment
+  # like `// TODO: add a container named 'curated'` bought the full extension.
+  if [[ "$container_count" -ge 2 ]] && [[ "$has_curated" == true ]]; then
+    l2=$((l2 + 5)); pass "second nested container (curated) present"
   else
     fail "need a second nested container named curated (keep raw; Task 2)"
   fi
 
   if [[ "$container_count" -lt 2 ]]; then
     warn "only $container_count nested container resource(s) — Task 2 expects raw + curated (count >= 2)"
+  elif [[ "$has_curated" != true ]]; then
+    warn "found $container_count containers but none named curated — Task 2 asks for raw + curated"
   fi
-fi
-
-# Raw check sum can be 40; L2 bucket is 35.
-if [[ "$l2" -gt 35 ]]; then
-  l2=35
 fi
 
 score=$((score + l2))
