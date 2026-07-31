@@ -29,7 +29,7 @@ c55-data-week-14/
 ├── docs/
 │   ├── deploy_succeeded.txt       Task 3: az deployment group create output
 │   ├── what_if.txt                Task 3: az deployment group what-if output
-│   ├── portal_confirm.md          Task 3: portal confirmation notes
+│   ├── portal_confirm.md          Task 3: portal notes + teardown line
 │   └── optional/                  Task 6: optional CI what-if evidence
 ├── WRITEUP.md                     Task 4: half-page teammate write-up
 ├── AI_ASSIST.md                   Task 5: LLM prompt + your review
@@ -42,14 +42,15 @@ c55-data-week-14/
 |---|---|---|
 | 1 | `main.bicep` + `modules/storage.bicep` | Extend with `environment` param + Environment tags |
 | 2 | `modules/storage.bicep` | Keep `raw`; add nested container `curated` |
-| 3 | Azure CLI + portal → `docs/` | Deploy + `what-if` + portal evidence |
+| 3 | Azure CLI + portal → `docs/` | Deploy + `what-if` + portal evidence + teardown line |
 | 4 | `WRITEUP.md` | Half-page write-up |
 | 5 | `AI_ASSIST.md` | One critically reviewed LLM use |
 | 6 | `.github/workflows/bicep.yml` + `docs/optional/` | Optional CI preview (bonus) |
 
 When you are done, tear down every resource this assignment created (delete the
-storage account; nested containers go with it). Teardown is part of the
-guidelines, not a separate graded file.
+storage account; nested containers go with it), then record it as a final line in
+`docs/portal_confirm.md`. The grader is static and cannot see Azure, so that line
+is the only evidence your teacher has that you cleaned up.
 
 Do **not** replace the starter with a paste from `azure-bicep-reference`
 `*-solution` branches — extend what is already here.
