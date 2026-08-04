@@ -23,7 +23,8 @@ jobs:
             --resource-group "$CLASS_RG" \
             --template-file main.bicep \
             --parameters \
-              storageName=sthyfyourname \
+              storageName=sthyfhalyna \
+              environment=dev \
               dbAdminPassword=not-a-real-secret
 
   deploy:
@@ -40,5 +41,6 @@ jobs:
             --resource-group "$CLASS_RG" \
             --template-file main.bicep \
             --parameters \
-              storageName=sthyfyourname \
+              storageName=sthyfhalyna \
+              environment=dev \
               dbAdminPassword=not-a-real-secret

@@ -1,5 +1,7 @@
 # Week 14 Assignment: Infrastructure as Code (Bicep)
 
+**Student:** Halyna Romanyshyn
+
 Extend a Chapter 4–complete Bicep starter (storage account + nested `raw`
 container) with an environment tag and a second `curated` container, then
 deploy, preview with `what-if`, confirm in the portal, and write it up.

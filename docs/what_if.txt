@@ -1,1 +1,40 @@
-<!-- Paste the az deployment group what-if output here. -->
+Note: The result may contain false positive predictions (noise).
+You can help us improve the accuracy of the result by opening an issue here: https://aka.ms/WhatIfIssues
+
+Resource and property changes are indicated with these symbols:
+  - Delete
+  ~ Modify
+  * Ignore
+
+The deployment will update the following scope:
+
+Scope: /subscriptions/1120c89d-2a5f-4a15-a582-2ea34f0bb5c3/resourceGroups/rg-hyf-students
+
+  ~ Microsoft.Storage/storageAccounts/sthyfhalyna [2023-01-01]
+    ~ tags.environment: "dev" => "prod"
+
+  ~ Microsoft.Storage/storageAccounts/sthyfhalyna/blobServices/default [2023-01-01]
+    - properties:
+
+        deleteRetentionPolicy.allowPermanentDelete: false
+        deleteRetentionPolicy.enabled:              false
+
+
+  ~ Microsoft.Storage/storageAccounts/sthyfhalyna/blobServices/default/containers/curated [2023-01-01]
+    - properties.defaultEncryptionScope:      "$account-encryption-key"
+    - properties.denyEncryptionScopeOverride: false
+
+  ~ Microsoft.Storage/storageAccounts/sthyfhalyna/blobServices/default/containers/raw [2023-01-01]
+    - properties.defaultEncryptionScope:      "$account-encryption-key"
+    - properties.denyEncryptionScopeOverride: false
+
+  * Microsoft.Storage/storageAccounts/sthyfbader
+  * Microsoft.Storage/storageAccounts/sthyfbaraah
+  * Microsoft.Storage/storageAccounts/sthyfhannah
+  * Microsoft.Storage/storageAccounts/sthyfimper0802
+  * Microsoft.Storage/storageAccounts/sthyflasseb
+  * Microsoft.Storage/storageAccounts/sthyfmohammedalfakih
+  * Microsoft.Storage/storageAccounts/sthyfpavel
+  * Microsoft.Storage/storageAccounts/sthyfw14lab
+
+Resource changes: 4 to modify, 8 to ignore.
