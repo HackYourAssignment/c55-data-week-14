@@ -1,8 +1,11 @@
 # Portal confirmation
 
-<!-- Two or three sentences: resource names you saw in $CLASS_RG, and that the
-     Deployments blade showed Succeeded. Do not paste secrets. -->
+I confirmed storage account `sthyfhalyna` in resource group `rg-hyf-students`. Under Data storage → Containers, both `raw` and `curated` were present. The Deployments page showed the `week14-halyna-dev` deployment with status Succeeded.
 
-<!-- Task 3 step 4: after you capture the evidence above, tear down and record it here,
-     e.g. `Teardown: deleted sthyf<yourname> (and both containers) on 2026-08-14.`
-     If your role blocked the delete, say so and name who you asked. -->
+Screenshots:
+
+- `screenshots/storage_account_confirm.png`
+- `screenshots/containers_raw_curated_confirm.png`
+- `screenshots/deployment_succeeded_confirm.png`
+
+Teardown: deleted `sthyfhalyna` and its nested containers on 2026-08-04.

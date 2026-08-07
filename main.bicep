@@ -12,6 +12,12 @@ param location string = resourceGroup().location
 param storageName string
 param containerName string = 'raw'
 
+@allowed([
+  'dev'
+  'prod'
+])
+param environment string = 'dev'
+
 // Dummy unused secret for hygiene practice — pass at deploy time, never commit the value
 @secure()
 param dbAdminPassword string
@@ -22,7 +28,10 @@ module storage 'modules/storage.bicep' = {
     location: location
     storageName: storageName
     containerName: containerName
+    environment: environment
   }
 }
 
 output storageId string = storage.outputs.storageId
+output rawContainerName string = storage.outputs.rawContainerName
+output curatedContainerName string = storage.outputs.curatedContainerName

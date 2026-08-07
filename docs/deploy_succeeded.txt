@@ -1,2 +1,120 @@
-<!-- Paste the az deployment group create JSON/text output here.
-     It must show provisioningState: Succeeded. -->
+{
+  "id": "/subscriptions/1120c89d-2a5f-4a15-a582-2ea34f0bb5c3/resourceGroups/rg-hyf-students/providers/Microsoft.Resources/deployments/week14-halyna-dev",
+  "location": null,
+  "name": "week14-halyna-dev",
+  "properties": {
+    "correlationId": "3cbb08d5-96bc-46e1-912a-5c4285c2bc05",
+    "debugSetting": null,
+    "dependencies": [],
+    "diagnostics": null,
+    "duration": "PT8.9628026S",
+    "error": null,
+    "extensions": [],
+    "mode": "Incremental",
+    "onErrorDeployment": null,
+    "outputResources": [
+      {
+        "apiVersion": null,
+        "extension": null,
+        "id": "/subscriptions/1120c89d-2a5f-4a15-a582-2ea34f0bb5c3/resourceGroups/rg-hyf-students/providers/Microsoft.Storage/storageAccounts/sthyfhalyna",
+        "identifiers": null,
+        "resourceGroup": "rg-hyf-students",
+        "resourceType": "Microsoft.Storage/storageAccounts"
+      },
+      {
+        "apiVersion": null,
+        "extension": null,
+        "id": "/subscriptions/1120c89d-2a5f-4a15-a582-2ea34f0bb5c3/resourceGroups/rg-hyf-students/providers/Microsoft.Storage/storageAccounts/sthyfhalyna/blobServices/default",
+        "identifiers": null,
+        "resourceGroup": "rg-hyf-students",
+        "resourceType": "Microsoft.Storage/storageAccounts/blobServices"
+      },
+      {
+        "apiVersion": null,
+        "extension": null,
+        "id": "/subscriptions/1120c89d-2a5f-4a15-a582-2ea34f0bb5c3/resourceGroups/rg-hyf-students/providers/Microsoft.Storage/storageAccounts/sthyfhalyna/blobServices/default/containers/curated",
+        "identifiers": null,
+        "resourceGroup": "rg-hyf-students",
+        "resourceType": "Microsoft.Storage/storageAccounts/blobServices/containers"
+      },
+      {
+        "apiVersion": null,
+        "extension": null,
+        "id": "/subscriptions/1120c89d-2a5f-4a15-a582-2ea34f0bb5c3/resourceGroups/rg-hyf-students/providers/Microsoft.Storage/storageAccounts/sthyfhalyna/blobServices/default/containers/raw",
+        "identifiers": null,
+        "resourceGroup": "rg-hyf-students",
+        "resourceType": "Microsoft.Storage/storageAccounts/blobServices/containers"
+      }
+    ],
+    "outputs": {
+      "curatedContainerName": {
+        "type": "String",
+        "value": "curated"
+      },
+      "rawContainerName": {
+        "type": "String",
+        "value": "raw"
+      },
+      "storageId": {
+        "type": "String",
+        "value": "/subscriptions/1120c89d-2a5f-4a15-a582-2ea34f0bb5c3/resourceGroups/rg-hyf-students/providers/Microsoft.Storage/storageAccounts/sthyfhalyna"
+      }
+    },
+    "parameters": {
+      "containerName": {
+        "type": "String",
+        "value": "raw"
+      },
+      "dbAdminPassword": {
+        "type": "SecureString"
+      },
+      "environment": {
+        "type": "String",
+        "value": "dev"
+      },
+      "location": {
+        "type": "String",
+        "value": "westeurope"
+      },
+      "storageName": {
+        "type": "String",
+        "value": "sthyfhalyna"
+      }
+    },
+    "parametersLink": null,
+    "providers": [
+      {
+        "id": null,
+        "namespace": "Microsoft.Resources",
+        "providerAuthorizationConsentState": null,
+        "registrationPolicy": null,
+        "registrationState": null,
+        "resourceTypes": [
+          {
+            "aliases": null,
+            "apiProfiles": null,
+            "apiVersions": null,
+            "capabilities": null,
+            "defaultApiVersion": null,
+            "locationMappings": null,
+            "locations": [
+              null
+            ],
+            "properties": null,
+            "resourceType": "deployments",
+            "zoneMappings": null
+          }
+        ]
+      }
+    ],
+    "provisioningState": "Succeeded",
+    "templateHash": "14701220362417228026",
+    "templateLink": null,
+    "timestamp": "2026-08-03T21:21:50.625432+00:00",
+    "validatedResources": null,
+    "validationLevel": null
+  },
+  "resourceGroup": "rg-hyf-students",
+  "tags": null,
+  "type": "Microsoft.Resources/deployments"
+}

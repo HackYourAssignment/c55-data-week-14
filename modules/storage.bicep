@@ -5,11 +5,20 @@
 param location string
 param storageName string
 param containerName string = 'raw'
+param environment string
 
 resource storage 'Microsoft.Storage/storageAccounts@2023-01-01' = {
   name: storageName
   location: location
-  sku: { name: 'Standard_LRS' }
+
+  tags: {
+    environment: environment
+  }
+
+  sku: {
+    name: 'Standard_LRS'
+  }
+
   kind: 'StorageV2'
 }
 
@@ -18,7 +27,7 @@ resource blobService 'Microsoft.Storage/storageAccounts/blobServices@2023-01-01'
   name: 'default'
 }
 
-resource container 'Microsoft.Storage/storageAccounts/blobServices/containers@2023-01-01' = {
+resource rawcontainer 'Microsoft.Storage/storageAccounts/blobServices/containers@2023-01-01' = {
   parent: blobService
   name: containerName
   properties: {
@@ -26,4 +35,14 @@ resource container 'Microsoft.Storage/storageAccounts/blobServices/containers@20
   }
 }
 
+resource curatedcontainer 'Microsoft.Storage/storageAccounts/blobServices/containers@2023-01-01' = {
+  parent: blobService
+  name: 'curated'
+  properties: {
+    publicAccess: 'None'
+  }
+}
+
 output storageId string = storage.id
+output rawContainerName string = rawcontainer.name
+output curatedContainerName string = curatedcontainer.name

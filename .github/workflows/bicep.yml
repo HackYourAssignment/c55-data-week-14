@@ -1,0 +1,46 @@
+name: Bicep
+
+on:
+  pull_request:
+  push:
+    branches: ["main"]
+
+env:
+  CLASS_RG: rg-hyf-students
+
+jobs:
+  what-if:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Preview deployment
+        run: |
+          az deployment group what-if \
+            --resource-group "$CLASS_RG" \
+            --template-file main.bicep \
+            --parameters \
+              storageName=sthyfhalyna \
+              environment=dev \
+              dbAdminPassword=not-a-real-secret
+
+  deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Apply deployment
+        run: |
+          az deployment group create \
+            --resource-group "$CLASS_RG" \
+            --template-file main.bicep \
+            --parameters \
+              storageName=sthyfhalyna \
+              environment=dev \
+              dbAdminPassword=not-a-real-secret
