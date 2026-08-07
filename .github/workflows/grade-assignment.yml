@@ -11,9 +11,12 @@ jobs:
       contents: read
       issues: write
       pull-requests: write
-    # Temporary pin: actions/checkout v6 blocks fork checkouts under
+    # Load-bearing pin: actions/checkout v6 blocks fork checkouts under
     # pull_request_target unless allow-unsafe-pr-checkout is set.
-    # Revert to HackYourFuture/github-actions@main after
+    # Upstream fix (HackYourFuture/github-actions#4) was CLOSED WITHOUT MERGE,
+    # so this is permanent, not temporary. The branch name says so: do not
+    # delete or force-push stable/hyf-auto-grade, it grades weeks 11, 12 and 14.
+    # Revert to HackYourFuture/github-actions@main only if upstream lands it.
     # https://github.com/HackYourFuture/github-actions/pull/4 merges
     # (closed without merge — keep this pin while fork PRs are the path).
-    uses: lassebenni/github-actions-fork/.github/workflows/auto-grade.yml@fix/allow-unsafe-pr-checkout-for-autograde
+    uses: lassebenni/github-actions-fork/.github/workflows/auto-grade.yml@stable/hyf-auto-grade
